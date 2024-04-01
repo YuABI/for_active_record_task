@@ -16,6 +16,11 @@ class ExercisesController < ApplicationController
     #   * joinsを使うこと
     #   * 取得したAddressのインスタンスにorders_countと呼びかけると注文の数を返すこと
     @address = Address
+    .joins (: orders)
+    .select("addresses .* , COUNT(orders .* ) AS orders_count")
+    .group("addresses.id")
+    .order("orders_count DESC")
+    .first
   end
 
   def exercise4 
@@ -23,5 +28,10 @@ class ExercisesController < ApplicationController
     #   * joinsを使うこと
     #   * 取得したCustomerのインスタンスにfoods_price_sumと呼びかけると合計金額を返すこと
     @customer = Customer
+    .joins (orders: :foods)
+    .select("customers .* , SUM(foods.price) AS foods_price_sum")
+    .group("customers.id")
+    .order("foods_price_sum DESC")
+    .first
   end
 end
